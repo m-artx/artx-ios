@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
+import 'product.dart';
 
 class ProductList extends StatefulWidget {
   final String category;
@@ -73,34 +74,49 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  Widget _buildProductGridItem(int index) {
-    var title = "작품 이름";  
-    var price = "₩70000";   
+Widget _buildProductGridItem(int index) {
+  var title = "작품 이름";
+  var price = "₩70000";
+  var imageUrl = 'assets/images/image${index + 1}.jpeg';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Product(
+                  imageUrl: 'assets/images/image${index + 1}.jpeg',
+                  name: title, 
+                  price: price
+                  ), // 수정된 부분
+              ),
+            );
+          },
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage('assets/images/image${index + 1}.jpeg'),
+                image: AssetImage(imageUrl),
               ),
             ),
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          price,
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
-    );
-  }
+      ),
+      SizedBox(height: 10),
+      Text(
+        title,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      Text(
+        price,
+        style: TextStyle(color: Colors.white),
+      ),
+    ],
+  );
+}
 }
