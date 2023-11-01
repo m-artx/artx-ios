@@ -4,12 +4,14 @@ import 'intro_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
 import 'side_menu.dart';
+import 'service/api_service.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    testApi();  // 여기에 추가
     return MaterialApp(
       home: IntroScreen(),
     );
@@ -50,8 +52,8 @@ class _MainScreenState extends State<MainScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/images/wideimage${index + 1}.jpeg',
+                      child: Image.network(
+                        'http://123.108.166.72:8080/8f1a50fe-3438-4634-b86d-0ab43a31e80c_Group_1340.png',
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
