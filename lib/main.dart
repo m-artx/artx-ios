@@ -3,6 +3,7 @@ import 'custom_app_bar.dart';
 import 'intro_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
+import 'side_menu.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 23, 23, 23),
       appBar: CustomAppBar(),
+      drawer: SideMenu(),
       body: SingleChildScrollView(
         child: Column(
           children: [
