@@ -5,7 +5,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Color.fromARGB(255, 23, 23, 23),
-      leading: Icon(Icons.menu),
+      leading: IconButton(
+        icon: Icon(Icons.menu),
+        onPressed: () => Scaffold.of(context).openDrawer(),  // 메뉴 버튼을 클릭하면 Drawer를 엽니다.
+      ),
       centerTitle: true,  // 앱바의 타이틀을 중앙에 배치
       title: Image.asset(
         'assets/images/app_bar_logo.png',
