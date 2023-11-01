@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'product_list.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -53,7 +54,12 @@ class SideMenu extends StatelessWidget {
           title: Text(subItem, style: subMenuStyle),
           onTap: () {
             Navigator.pop(context);
-            // TODO: 페이지 이동 코드
+            if (['그림', '도자', '기타'].contains(subItem)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProductList(category: subItem)),
+            );
+          }
           },
         )).toList(),
         iconColor: Colors.white,
