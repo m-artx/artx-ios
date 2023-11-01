@@ -99,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                 return AspectRatio(
                   aspectRatio: 1/2,
                   child: Image.asset(
-                    'assets/images/image${index + 1}.jpg',
+                    'assets/images/image${index + 1}.jpeg',
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
