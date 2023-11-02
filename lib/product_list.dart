@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
 import 'product.dart';
+import 'service/api_service.dart';
+import 'package:http/http.dart' as http;
+import 'font_util.dart';
 
 class ProductList extends StatefulWidget {
   final String category;
@@ -13,7 +16,30 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  int currentPage = 1;
+  int currentPage = 0;
+  final int pageSize = 10;
+  List<dynamic> products = [];
+  bool isFetching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+  }
+
+  void _fetchProducts() async {
+    setState(() {
+      isFetching = true;
+      print(widget.category);
+    });
+
+    var productService = ProductService();
+    var response = await productService.getCategoryProducts(widget.category, currentPage, pageSize);
+    setState(() {
+      products = response['content'];
+      isFetching = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +60,9 @@ class _ProductListState extends State<ProductList> {
                 crossAxisSpacing: 15,
                 childAspectRatio: 0.8,
               ),
-              itemCount: 10, 
-              itemBuilder: (context, index) {
-                return _buildProductGridItem(index);
+              itemCount: products.length, // itemCount를 products의 길이에 맞게 동적으로 설정
+  itemBuilder: (context, index) {
+    return _buildProductGridItem(index);
               },
             ),
             SizedBox(height: 20),
@@ -44,27 +70,29 @@ class _ProductListState extends State<ProductList> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    if (currentPage > 1) {
-                      setState(() {
-                        currentPage--;
-                      });
-                    }
-                  },
-                ),
+    icon: Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () {
+      if (currentPage > 0) {
+        setState(() {
+          currentPage--;
+          _fetchProducts();
+        });
+      }
+    },
+  ),
                 Text(
                   "페이지 $currentPage",
                   style: TextStyle(color: Colors.white),
                 ),
                 IconButton(
-                  icon: Icon(Icons.arrow_forward, color: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      currentPage++;  
-                    });
-                  },
-                ),
+    icon: Icon(Icons.arrow_forward, color: Colors.white),
+    onPressed: () {
+      setState(() {
+        currentPage++;
+        _fetchProducts();
+      });
+    },
+  ),
               ],
             ),
             SizedBox(height: 20),
@@ -75,9 +103,10 @@ class _ProductListState extends State<ProductList> {
   }
 
 Widget _buildProductGridItem(int index) {
-  var title = "작품 이름";
-  var price = "₩70000";
-  var imageUrl = 'assets/images/image${index + 1}.jpeg';
+  var product = products[index];
+    String productId = product['productId'].toString();
+    String imageUrl = product['productImageUrl'];
+    String title = product['productTitle'];
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,11 +117,7 @@ Widget _buildProductGridItem(int index) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Product(
-                  imageUrl: 'assets/images/image${index + 1}.jpeg',
-                  name: title, 
-                  price: price
-                  ), // 수정된 부분
+                builder: (context) => Product(productId: productId), // 수정된 부분
               ),
             );
           },
@@ -101,7 +126,7 @@ Widget _buildProductGridItem(int index) {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage(imageUrl),
+                image: NetworkImage(imageUrl),
               ),
             ),
           ),
@@ -111,10 +136,6 @@ Widget _buildProductGridItem(int index) {
       Text(
         title,
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-      Text(
-        price,
-        style: TextStyle(color: Colors.white),
       ),
     ],
   );
