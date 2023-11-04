@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'art_product_list.dart';
-import 'artist_product_list.dart';
+import 'product_list.dart';
+import 'artist_center.dart';
 
 class SideMenu extends StatelessWidget {
   @override
