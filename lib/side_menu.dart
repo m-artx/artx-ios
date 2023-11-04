@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'product_list.dart';
+import 'artist_center.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -48,32 +49,39 @@ class SideMenu extends StatelessWidget {
     Widget menuItem;
   
     if (subItems != null && subItems.isNotEmpty) {
-      menuItem = ExpansionTile(
-        title: Text(title, style: mainMenuStyle),
-        children: subItems.map((subItem) => ListTile(
-          title: Text(subItem, style: subMenuStyle),
+        menuItem = ExpansionTile(
+          title: Text(title, style: mainMenuStyle),
+          children: subItems.map((subItem) => ListTile(
+            title: Text(subItem, style: subMenuStyle),
+            onTap: () {
+              Navigator.pop(context);
+              if (['ART', 'CERAMIC', 'ETC'].contains(subItem)) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductList(category: subItem)),
+                );
+              } else if (subItem == '상품 관리') {
+                // 여기에서 "상품 관리" 항목이 클릭되었을 때의 이동 로직을 추가합니다.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ArtistProductList()), // 'ArtistProductList'는 대상 페이지의 클래스 이름입니다.
+                );
+              }
+              // 다른 메뉴 항목들에 대한 처리를 필요에 따라 추가할 수 있습니다.
+            },
+          )).toList(),
+          iconColor: Colors.white,
+          collapsedIconColor: Colors.white,
+        );
+      } else {
+        menuItem = ListTile(
+          title: Text(title, style: mainMenuStyle),
           onTap: () {
             Navigator.pop(context);
-            if (['ART', 'CERAMIC', 'ETC'].contains(subItem)) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProductList(category: subItem)),
-            );
-          }
+            // TODO: 페이지 이동 코드
           },
-        )).toList(),
-        iconColor: Colors.white,
-        collapsedIconColor: Colors.white,
-      );
-    } else {
-      menuItem = ListTile(
-        title: Text(title, style: mainMenuStyle),
-        onTap: () {
-          Navigator.pop(context);
-          // TODO: 페이지 이동 코드
-        },
-      );
-    }
+        );
+      }
   
     // 메뉴와 메뉴 사이의 간격을 조절
     return Padding(
