@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'product_list.dart';
 import 'artist_center.dart';
+import 'cart.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -20,7 +21,16 @@ class SideMenu extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                   Spacer(),
-                  Icon(Icons.shopping_cart, color: Colors.white),
+                  IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context); // Close the drawer first
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CartPage()), // Replace CartPage with the name of your cart page class
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

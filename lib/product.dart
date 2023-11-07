@@ -3,7 +3,6 @@ import 'custom_app_bar.dart';
 import 'side_menu.dart';
 import 'dart:ui';
 import 'service/api_service.dart';
-import 'package:http/http.dart' as http;
 import 'font_util.dart';
 
 class Product extends StatefulWidget {
@@ -18,9 +17,6 @@ class Product extends StatefulWidget {
 class _ProductState extends State<Product> {
   bool _isImageZoomed = false;
   Map<String, dynamic>? _productDetails;
-  late String imageUrl; // imageUrl을 late로 선언합니다. 그리고 StatefulWidget의 데이터를 이용하여야 하므로 widget.을 사용합니다.
-  late String name;
-  late String price;
 
   @override
   void initState() {
@@ -32,79 +28,76 @@ class _ProductState extends State<Product> {
     ProductService productService = ProductService();
     try {
       final details = await productService.getProductDetails(widget.productId);
-      setState(() {
-        _productDetails = details;
-        // 상품 상세 정보가 로드되면 변수에 할당
-        imageUrl = _productDetails!['productImageUrls'][0];
-        name = _productDetails!['productTitle'];
-        price = "${_productDetails!['productPrice']}원";
-      });
+      if (details != null && details.isNotEmpty) {
+        setState(() {
+          _productDetails = details;
+        });
+      }
     } catch (e) {
       print('Error fetching product details: $e');
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  // 데이터가 로드될 때까지 로딩 인디케이터를 표시
-  if (_productDetails == null) {
+  @override
+  Widget build(BuildContext context) {
+    if (_productDetails == null) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    String imageUrl = _productDetails!['productRepresentativeImage'] ?? 'https://example.com/default_image.png'; // 예시 URL을 실제 URL로 교체해야 함
+    String name = _productDetails!['productTitle'] ?? '제품 이름 없음';
+    String price = "${_productDetails!['productPrice']}원";
+    String productDescription = _productDetails!['productDescription'] ?? '상품 설명이 없습니다.';
+
     return Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  // 데이터가 로드되면 UI를 구성
-  List<String> imageUrls = List<String>.from(_productDetails!['productImageUrls']);
-  String name = _productDetails!['productTitle'];
-  String price = "${_productDetails!['productPrice']}원";
-
-  return Scaffold(
-    backgroundColor: Color.fromARGB(255, 23, 23, 23),
-    appBar: CustomAppBar(),
-    drawer: SideMenu(),
-    body: Stack(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isImageZoomed = !_isImageZoomed;
-                        });
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(imageUrls[0]), // 여기를 수정
-                            fit: BoxFit.cover,
+      backgroundColor: Color.fromARGB(255, 23, 23, 23),
+      appBar: CustomAppBar(),
+      drawer: SideMenu(),
+      body: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isImageZoomed = !_isImageZoomed;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(imageUrl), // 수정됨
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    ListTile(
-                      title: Text(
-                        name, // 여기를 수정
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: getFontFamily(name), // 필요하다면 이 부분을 수정
+                      ListTile(
+                        title: Text(
+                          name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: getFontFamily(name),
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        price, // 여기를 수정
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: getFontFamily(price), // 필요하다면 이 부분을 수정
+                        subtitle: Text(
+                          price,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: getFontFamily(price),
+                          ),
                         ),
+                        trailing: Icon(Icons.shopping_cart, color: Colors.white),
                       ),
-                      trailing: Icon(Icons.shopping_cart, color: Colors.white),
-                    ),
                       TextButton(
                         child: Text(
                           '상품 상세설명',
@@ -120,7 +113,7 @@ Widget build(BuildContext context) {
                               return Container(
                                 height: 300,
                                 child: Center(
-                                  child: Text('상품 상세설명 내용'),
+                                  child: Text(productDescription),
                                 ),
                               );
                             },
@@ -133,7 +126,7 @@ Widget build(BuildContext context) {
               ),
               Container(
                 height: 60,
-                margin: EdgeInsets.only(left: 30, right: 30, bottom: 20),
+                margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -187,15 +180,17 @@ Widget build(BuildContext context) {
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 10),
                         ),
-                        child: Image.network(imageUrl), // Image.asset를 Image.network로 변경해야 합니다.
+                        child: Image.network(imageUrl), // 수정됨
                       ),
                     ),
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
   }
+
 }
+
