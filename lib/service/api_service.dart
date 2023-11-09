@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  final String _baseUrl = 'http://64.110.89.251:8081/api';
+  final String _baseUrl = 'https://kf6b8a25ae1ada.user-app.krampoline.com/api';
 
   // 상품 상세 정보를 가져오는 메소드
   Future<Map<String, dynamic>> getProductDetails(String productId) async {
