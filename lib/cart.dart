@@ -3,6 +3,7 @@ import 'custom_app_bar.dart';
 import 'side_menu.dart';
 import 'font_util.dart';
 import 'service/api_service.dart';
+import 'Payment page.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -49,7 +50,6 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +59,14 @@ class _CartPageState extends State<CartPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...cartItems.map((item) => CartItemWidget(item: item, productService: _productService)).toList(),
+            ...cartItems
+                .map((item) =>
+                    CartItemWidget(item: item, productService: _productService))
+                .toList(),
             CartSummary(cartItems: cartItems),
           ],
         ),
       ),
-
       bottomNavigationBar: BottomAppBar(
         color: Color.fromARGB(255, 23, 23, 23), // 이전 배경색 유지
         child: SafeArea(
@@ -87,7 +89,10 @@ class _CartPageState extends State<CartPage> {
                 ),
               ),
               onPressed: () {
-                // 추후 결제 연결
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaymentPage()),
+                );
               },
             ),
           ),
@@ -125,7 +130,6 @@ class CartItemWidget extends StatefulWidget {
   _CartItemWidgetState createState() => _CartItemWidgetState();
 }
 
-
 class _CartItemWidgetState extends State<CartItemWidget> {
   late int quantity;
   late ProductService _productService; // _productService 선언
@@ -139,7 +143,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
   void _increaseQuantity() async {
     try {
-      await _productService.increaseCartItemQuantity(widget.item.cartId, widget.item.productId);
+      await _productService.increaseCartItemQuantity(
+          widget.item.cartId, widget.item.productId);
       setState(() {
         quantity++;
       });
@@ -149,9 +154,11 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   }
 
   void _decreaseQuantity() async {
-    if (quantity > 1) { // 수량이 1보다 클 때만 감소 가능
+    if (quantity > 1) {
+      // 수량이 1보다 클 때만 감소 가능
       try {
-        await _productService.decreaseCartItemQuantity(widget.item.cartId, widget.item.productId);
+        await _productService.decreaseCartItemQuantity(
+            widget.item.cartId, widget.item.productId);
         setState(() {
           quantity--;
         });
@@ -170,7 +177,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
         child: Row(
           children: [
             Image.network(
-              widget.item.image ?? '기본이미지URL', // item.image가 null일 경우 기본 이미지 URL 사용
+              widget.item.image ??
+                  '기본이미지URL', // item.image가 null일 경우 기본 이미지 URL 사용
               width: 100,
               height: 100,
               fit: BoxFit.cover,
@@ -231,7 +239,8 @@ class CartSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int total = cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    int total =
+        cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
     return Container(
       color: Colors.white,
