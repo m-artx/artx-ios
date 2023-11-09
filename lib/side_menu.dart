@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'product_list.dart';
 import 'artist_center.dart';
+import 'cart.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -20,7 +21,16 @@ class SideMenu extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                   ),
                   Spacer(),
-                  Icon(Icons.shopping_cart, color: Colors.white),
+                  IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context); // Close the drawer first
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CartPage()), // Replace CartPage with the name of your cart page class
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -28,7 +38,7 @@ class SideMenu extends StatelessWidget {
               offset: Offset(5, -30), // 음수 값을 사용하여 위로 조정
               child: Column(
                 children: [
-                  _buildMenuItem(context, '작품', subItems: ['ART', 'CERAMIC', 'ETC']),
+                  _buildMenuItem(context, '작품', subItems: ['PAINT', 'CERAMIC', 'ETC']),
                   _buildMenuItem(context, '고객센터', subItems: ['공지사항', '공지사항 관리', '자주하는 질문', '1:1 문의', '1:1문의 관리', '작가 전환 신청']),
                   _buildMenuItem(context, '마이페이지', subItems: ['개인정보 관리', '주문/배송정보', '배송지 관리', '비밀번호 변경']),
                   _buildMenuItem(context, '작가 센터', subItems: ['상품 관리', '문의 관리', '개인 커미션 관리']),
@@ -55,7 +65,7 @@ class SideMenu extends StatelessWidget {
             title: Text(subItem, style: subMenuStyle),
             onTap: () {
               Navigator.pop(context);
-              if (['ART', 'CERAMIC', 'ETC'].contains(subItem)) {
+              if (['PAINT', 'CERAMIC', 'ETC'].contains(subItem)) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProductList(category: subItem)),

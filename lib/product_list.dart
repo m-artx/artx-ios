@@ -20,6 +20,7 @@ class _ProductListState extends State<ProductList> {
   final int pageSize = 10;
   List<dynamic> products = [];
   bool isFetching = false;
+  bool isLastPage = false;
 
   @override
   void initState() {
@@ -28,16 +29,19 @@ class _ProductListState extends State<ProductList> {
   }
 
   void _fetchProducts() async {
+    if(isFetching) return; // 이미 데이터를 가져오고 있다면 중복 실행 방지
+
     setState(() {
       isFetching = true;
-      print(widget.category);
     });
 
     var productService = ProductService();
     var response = await productService.getCategoryProducts(widget.category, currentPage, pageSize);
+
     setState(() {
-      products = response['content'];
+      products = response['content'] ?? [];
       isFetching = false;
+      isLastPage = response['lastPage'] ?? false; // 마지막 페이지인지 여부를 업데이트
     });
   }
 
@@ -67,34 +71,32 @@ class _ProductListState extends State<ProductList> {
             ),
             SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white),
-    onPressed: () {
-      if (currentPage > 0) {
-        setState(() {
-          currentPage--;
-          _fetchProducts();
-        });
-      }
-    },
-  ),
-                Text(
-                  "페이지 $currentPage",
-                  style: TextStyle(color: Colors.white),
-                ),
-                IconButton(
-    icon: Icon(Icons.arrow_forward, color: Colors.white),
-    onPressed: () {
-      setState(() {
-        currentPage++;
-        _fetchProducts();
-      });
-    },
-  ),
-              ],
-            ),
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: currentPage > 0 ? () {
+            setState(() {
+              currentPage--;
+              _fetchProducts();
+            });
+          } : null, // 첫 페이지에서는 이전 버튼 비활성화
+        ),
+        Text(
+          "페이지 $currentPage",
+          style: TextStyle(color: Colors.white),
+        ),
+        IconButton(
+          icon: Icon(Icons.arrow_forward, color: Colors.white),
+          onPressed: !isLastPage ? () { // 마지막 페이지가 아닐 경우에만 다음 페이지 함수 실행
+            setState(() {
+              currentPage++;
+              _fetchProducts();
+            });
+          } : null, // 마지막 페이지에서는 다음 버튼 비활성화
+        ),
+      ],
+    ),
             SizedBox(height: 20),
           ],
         ),
@@ -104,9 +106,9 @@ class _ProductListState extends State<ProductList> {
 
 Widget _buildProductGridItem(int index) {
   var product = products[index];
-    String productId = product['productId'].toString();
-    String imageUrl = product['productImageUrl'];
-    String title = product['productTitle'];
+  String productId = product['productId'].toString();
+  String imageUrl = product['productRepresentativeImage'] ?? 'https://example.com/default-image.png'; // null 대신 기본 이미지
+  String title = product['productTitle'] ?? '제품 이름 없음'; // null 대신 기본 문자열
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +128,7 @@ Widget _buildProductGridItem(int index) {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.cover,
+                // imageUrl이 null인 경우 기본 이미지를 사용합니다.
                 image: NetworkImage(imageUrl),
               ),
             ),
