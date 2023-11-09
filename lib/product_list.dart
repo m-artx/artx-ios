@@ -3,8 +3,6 @@ import 'custom_app_bar.dart';
 import 'side_menu.dart';
 import 'product.dart';
 import 'service/api_service.dart';
-import 'package:http/http.dart' as http;
-import 'font_util.dart';
 
 class ProductList extends StatefulWidget {
   final String category;
@@ -29,7 +27,7 @@ class _ProductListState extends State<ProductList> {
   }
 
   void _fetchProducts() async {
-    if(isFetching) return; // 이미 데이터를 가져오고 있다면 중복 실행 방지
+    if (isFetching) return;
 
     setState(() {
       isFetching = true;
@@ -41,7 +39,7 @@ class _ProductListState extends State<ProductList> {
     setState(() {
       products = response['content'] ?? [];
       isFetching = false;
-      isLastPage = response['lastPage'] ?? false; // 마지막 페이지인지 여부를 업데이트
+      isLastPage = response['lastPage'] ?? false;
     });
   }
 
@@ -64,9 +62,9 @@ class _ProductListState extends State<ProductList> {
                 crossAxisSpacing: 15,
                 childAspectRatio: 0.8,
               ),
-              itemCount: products.length, // itemCount를 products의 길이에 맞게 동적으로 설정
-  itemBuilder: (context, index) {
-    return _buildProductGridItem(index);
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                return _buildProductGridItem(index);
               },
             ),
             SizedBox(height: 20),
@@ -105,42 +103,86 @@ class _ProductListState extends State<ProductList> {
   }
 
 Widget _buildProductGridItem(int index) {
-  var product = products[index];
-  String productId = product['productId'].toString();
-  String imageUrl = product['productRepresentativeImage'] ?? 'https://example.com/default-image.png'; // null 대신 기본 이미지
-  String title = product['productTitle'] ?? '제품 이름 없음'; // null 대신 기본 문자열
+    var product = products[index];
+    String productId = product['productId'].toString();
+    String imageUrl = product['productRepresentativeImage'] ?? 'https://example.com/default-image.png';
+    String title = product['productTitle'] ?? '제품 이름 없음';
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Expanded(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Product(productId: productId), // 수정된 부분
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                // imageUrl이 null인 경우 기본 이미지를 사용합니다.
-                image: NetworkImage(imageUrl),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () => _handleProductTap(productId),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(imageUrl),
+                ),
               ),
             ),
           ),
         ),
-      ),
-      SizedBox(height: 10),
-      Text(
-        title,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-    ],
-  );
+        SizedBox(height: 10),
+        Text(
+          title,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  void _handleProductTap(String productId) async {
+    if (!mounted) return;
+
+    try {
+      final productService = ProductService();
+      final productDetails = await productService.getProductDetails(productId);
+      final quantity = productDetails['productQuantity'] ?? 0;
+
+      if (quantity > 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Product(productId: productId),
+          ),
+        );
+      } else {
+        _showSoldOutDialog();
+      }
+    } catch (e) {
+      if (!mounted) return;
+      print('상품 상세 정보를 가져오는데 실패했습니다: $e');
+    }
+  }
+
+  void _showSoldOutDialog() {
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('알림'),
+          content: Text('이 제품은 품절되었습니다.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
-}
+
+
+
+
+
+

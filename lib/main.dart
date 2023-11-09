@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             SizedBox(height: 60),
             Text(
-              '새로 발견한 작가님',
+              '주목할만한 작가님',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
