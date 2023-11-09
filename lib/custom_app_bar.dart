@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login.dart'; // 필요한 login.dart 페이지를 import
-// import 'sing_up.dart';
+import 'sign_up.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -18,26 +18,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: kToolbarHeight * 0.3,
       ),
       actions: [
-        IconButton(  // person 아이콘에 IconButton을 사용합니다.
+        IconButton(
+          // person 아이콘에 IconButton을 사용합니다.
           icon: Icon(Icons.person),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),  // LoginPage로 이동하는 로직을 추가
+              MaterialPageRoute(
+                  builder: (context) => LoginPage()), // LoginPage로 이동하는 로직을 추가
             );
           },
         ),
         SizedBox(width: 20),
-        /* IconButton(  // person 아이콘에 IconButton을 사용합니다.
+        IconButton(
+          // person 아이콘에 IconButton을 사용합니다.
           icon: Icon(Icons.notifications),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SignUpScreenUI()),  // LoginPage로 이동하는 로직을 추가
+              MaterialPageRoute(
+                  builder: (context) =>
+                      CombinedSignUpScreen()), // LoginPage로 이동하는 로직을 추가
             );
           },
         ),
-        */
         SizedBox(width: 10),
       ],
     );
