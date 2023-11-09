@@ -38,7 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      CombinedSignUpScreen()), // LoginPage로 이동하는 로직을 추가
+                      SignupPage()), // LoginPage로 이동하는 로직을 추가
             );
           },
         ),

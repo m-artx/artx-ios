@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CombinedSignUpScreen extends StatefulWidget {
-  const CombinedSignUpScreen({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
   @override
-  _CombinedSignUpScreenState createState() => _CombinedSignUpScreenState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _CombinedSignUpScreenState extends State<CombinedSignUpScreen> {
+class _SignupPageState extends State<SignupPage> {
   bool isAllAgreed = false;
   List<bool> isAgreed = [false, false, false, false];
 
