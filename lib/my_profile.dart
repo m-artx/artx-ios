@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_app_bar.dart'; // 앱바를 위한 사용자 정의 위젯을 임포트합니다.
 import 'side_menu.dart'; // 사이드 메뉴를 위한 사용자 정의 위젯을 임포트합니다.
+import 'customer_service.dart';
 
 class MyProfilePage extends StatelessWidget {
   @override
@@ -50,59 +51,94 @@ class MyProfilePage extends StatelessWidget {
           const SizedBox(height: 21),
           Divider(color: Colors.white), // 검은색 가로줄
           const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '개인정보 관리',
-              border: OutlineInputBorder(
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('개인정보 관리',
+                style: TextStyle(color: Colors.white)), // 텍스트 색상을 흰색으로 변경
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              primary: Colors.black, // 배경색을 검정색으로 변경
+              minimumSize: Size(200, 50), // 버튼 크기를 변경
+            ),
+          ),
+          const SizedBox(height: 16), // 버튼 사이의 간격을 조절할 수 있습니다.
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('비밀번호 변경',
+                style: TextStyle(color: Colors.white)), // 텍스트 색상을 흰색으로 변경
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              primary: Colors.black, // 배경색을 검정색으로 변경
+              minimumSize: Size(200, 50), // 버튼 크기를 변경
             ),
           ),
           const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '비밀번호 변경',
-              border: OutlineInputBorder(
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('주문/배송정보',
+                style: TextStyle(color: Colors.white)), // 텍스트 색상을 흰색으로 변경
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              primary: Colors.black, // 배경색을 검정색으로 변경
+              minimumSize: Size(200, 50), // 버튼 크기를 변경
             ),
           ),
           const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '주문/ 배송정보',
-              border: OutlineInputBorder(
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('배송지관리',
+                style: TextStyle(color: Colors.white)), // 텍스트 색상을 흰색으로 변경
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              primary: Colors.black, // 배경색을 검정색으로 변경
+              minimumSize: Size(200, 50), // 버튼 크기를 변경
             ),
           ),
           const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '배송지 관리',
-              border: OutlineInputBorder(
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => customer_service(),
+                ),
+              );
+            },
+            child: Text(
+              '고객센터',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
+              primary: Colors.black,
+              minimumSize: Size(200, 50),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('로그아웃',
+                style: TextStyle(color: Colors.white)), // 텍스트 색상을 흰색으로 변경
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              primary: Colors.black, // 배경색을 검정색으로 변경
+              minimumSize: Size(200, 50), // 버튼 크기를 변경
             ),
           ),
           const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '고객센터',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: '로그아웃',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-            ),
-          ),
         ],
       ),
     );
