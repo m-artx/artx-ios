@@ -40,7 +40,7 @@ class SideMenu extends StatelessWidget {
                 children: [
                   _buildMenuItem(context, '작품', subItems: ['PAINT', 'CERAMIC', 'ETC']),
                   _buildMenuItem(context, '고객센터', subItems: ['공지사항', '공지사항 관리', '자주하는 질문', '1:1 문의', '1:1문의 관리', '작가 전환 신청']),
-                  _buildMenuItem(context, '마이페이지', subItems: ['개인정보 관리', '주문/배송정보', '배송지 관리', '비밀번호 변경']),
+                  _buildMenuItem(context, '마이페이지', subItems: ['내 프로필', '개인정보 관리', '주문/배송정보', '배송지 관리', '비밀번호 변경']),
                   _buildMenuItem(context, '작가 센터', subItems: ['상품 관리', '문의 관리', '개인 커미션 관리']),
                   _buildMenuItem(context, '관리자센터', subItems: ['작가 전환 관리', '주문 관리', '배송 관리', '회원 관리']),
                 ],
