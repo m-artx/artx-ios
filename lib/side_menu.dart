@@ -43,6 +43,8 @@ class SideMenu extends StatelessWidget {
               offset: Offset(5, -30), // 음수 값을 사용하여 위로 조정
               child: Column(
                 children: [
+
+
                   _buildMenuItem(context, '작품',
                       subItems: ['PAINT', 'CERAMIC', 'ETC']),
                   _buildMenuItem(context, '고객센터', subItems: [
@@ -64,6 +66,7 @@ class SideMenu extends StatelessWidget {
                       subItems: ['상품 관리', '문의 관리', '개인 커미션 관리']),
                   _buildMenuItem(context, '관리자센터',
                       subItems: ['작가 전환 관리', '주문 관리', '배송 관리', '회원 관리']),
+
                 ],
               ),
             ),
