@@ -4,6 +4,7 @@ import 'artist_center.dart';
 import 'cart.dart';
 import 'my_profile.dart';
 import 'change_pw.dart';
+import 'Order_Delivery.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -97,7 +98,6 @@ class SideMenu extends StatelessWidget {
                                 ProductList(category: subItem)),
                       );
                     } else if (subItem == '상품 관리') {
-                      // 여기에서 "상품 관리" 항목이 클릭되었을 때의 이동 로직을 추가합니다.
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -105,17 +105,21 @@ class SideMenu extends StatelessWidget {
                                 ArtistProductList()), // 'ArtistProductList'는 대상 페이지의 클래스 이름입니다.
                       );
                     } else if (subItem == '내 프로필') {
-                      // Add this condition
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => MyProfilePage()),
                       );
                     } else if (subItem == '비밀번호 변경') {
-                      // Add this condition
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => change_pw()),
+                      );
+                    } else if (subItem == '주문/배송정보') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Order_Delivery()),
                       );
                     }
                     // 다른 메뉴 항목들에 대한 처리를 필요에 따라 추가할 수 있습니다.
