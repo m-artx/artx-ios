@@ -3,6 +3,7 @@ import 'product_list.dart';
 import 'artist_center.dart';
 import 'cart.dart';
 import 'my_profile.dart';
+import 'change_pw.dart';
 
 class SideMenu extends StatelessWidget {
   @override
@@ -109,6 +110,12 @@ class SideMenu extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => MyProfilePage()),
+                      );
+                    } else if (subItem == '비밀번호 변경') {
+                      // Add this condition
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => change_pw()),
                       );
                     }
                     // 다른 메뉴 항목들에 대한 처리를 필요에 따라 추가할 수 있습니다.
