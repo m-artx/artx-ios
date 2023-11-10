@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart'; // 필요한 login.dart 페이지를 import
 import 'sign_up.dart';
+import 'main.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -12,10 +13,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () => Scaffold.of(context).openDrawer(),
       ),
       centerTitle: true,
-      title: Image.asset(
-        'assets/images/app_bar_logo.png',
-        fit: BoxFit.cover,
-        height: kToolbarHeight * 0.3,
+      title: GestureDetector(
+        // GestureDetector로 로고를 감싸 클릭 이벤트를 처리합니다.
+        onTap: () {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => MainScreen()), // 메인 화면으로 이동합니다.
+            (Route<dynamic> route) => false,
+          );
+        },
+        child: Image.asset(
+          'assets/images/app_bar_logo.png',
+          fit: BoxFit.cover,
+          height: kToolbarHeight * 0.3,
+        ),
       ),
       actions: [
         IconButton(
