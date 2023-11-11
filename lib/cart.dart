@@ -59,10 +59,11 @@ class _CartPageState extends State<CartPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ...cartItems
-                .map((item) =>
-                    CartItemWidget(item: item, productService: _productService))
-                .toList(),
+            ...cartItems.map((item) => CartItemWidget(
+              item: item,
+              productService: _productService,
+              onQuantityChanged: () => setState(() {}), // 수량 변경 시 상태 갱신
+            )).toList(),
             CartSummary(cartItems: cartItems),
           ],
         ),
@@ -123,8 +124,13 @@ class CartItem {
 class CartItemWidget extends StatefulWidget {
   final CartItem item;
   final ProductService productService; // ProductService 추가
+  final VoidCallback onQuantityChanged; // 수량 변경 콜백 
 
-  CartItemWidget({required this.item, required this.productService}); // 생성자 수정
+  CartItemWidget({
+    required this.item, 
+    required this.productService,
+    required this.onQuantityChanged // 콜백 추가
+    });
 
   @override
   _CartItemWidgetState createState() => _CartItemWidgetState();
@@ -132,7 +138,7 @@ class CartItemWidget extends StatefulWidget {
 
 class _CartItemWidgetState extends State<CartItemWidget> {
   late int quantity;
-  late ProductService _productService; // _productService 선언
+  late ProductService _productService; 
 
   @override
   void initState() {
@@ -148,6 +154,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
       setState(() {
         quantity++;
       });
+      widget.onQuantityChanged(); // 수량 변경 시 콜백 호출
     } catch (error) {
       print('수량 증가 에러: $error');
     }
@@ -162,6 +169,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
         setState(() {
           quantity--;
         });
+        widget.onQuantityChanged(); // 수량 변경 시 콜백 호출
       } catch (error) {
         print('수량 감소 에러: $error');
       }

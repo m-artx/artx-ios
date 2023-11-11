@@ -51,14 +51,6 @@ class ProductService {
     'Content-Type': 'application/json',
   };
 
-
-    // 쿼리 파라미터를 URL에 포함합니다. (Uri 클래스 사용)
-    final uri =
-        Uri.parse('$_baseUrl/products').replace(queryParameters: queryParams);
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
-
     print('Requesting: $uri');
     final response = await http.get(uri, headers: headers);
 
@@ -145,10 +137,8 @@ class ProductService {
       rethrow;
     }
   }
-}
 
-
-// 주문 생성
+  // 주문 생성
   Future<Map<String, dynamic>> createOrder({
     required String userId,
     required List<Map<String, dynamic>> orderDetails,
@@ -213,6 +203,9 @@ class ProductService {
     }
   }
 
-
 }
+
+
+
+
 
