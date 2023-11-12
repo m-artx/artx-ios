@@ -18,6 +18,19 @@ class _PaymentPageState extends State<PaymentPage> {
   String addressDetail = ''; // 상세 주소
   List<CartItem> cartItems = []; // 장바구니 목록
 
+  // 총 작품 금액을 계산하는 함수
+  int getTotalProductPrice() {
+    return cartItems.fold(0, (total, item) => total + (item.price * item.quantity));
+  }
+
+  // 배송비 (고정 값)
+  final int deliveryFee = 5000;
+
+  // 최종 결제 금액을 계산하는 함수
+  int getFinalPrice() {
+    return getTotalProductPrice() + deliveryFee;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -219,7 +232,11 @@ String _selectedPaymentMethod = 'kakaoPay';
                       style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('이름'))),
                   SizedBox(height: 4),
                   ...cartItems
-                        .map((item) => CartItemWidget(item: item, productService: _productService))
+                        .map((item) => CartItemWidget(
+                          item: item,
+                           productService: _productService,
+                           onQuantityChanged: () {},
+                           ))
                         .toList(),
                 ],
               ),
@@ -251,7 +268,11 @@ Padding(
         title: Row(
           mainAxisSize: MainAxisSize.min, // Row의 크기를 최소화합니다.
           children: [
-            Image.asset('assets/images/payment_icon_yellow_small.png'),
+            Image.asset('assets/images/payment_icon_yellow_small.png',
+            width: 70, // 원하는 너비 설정
+            height: 30 // 원하는 높이 설정
+            ),
+            
           ],
         ),
       ),
@@ -270,14 +291,17 @@ Padding(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('결제정보',
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('이름'))),
-                  SizedBox(height: 4),
-                  Text('총 작품 금액                                       가격',
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('이름'))),
-                  SizedBox(height: 4),
-                  Text('총 배송비                                           가격',
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('이름'))),
-                  SizedBox(height: 4),
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                    SizedBox(height: 4),
+                    Text('총 작품 금액: ${getTotalProductPrice()}원',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                    SizedBox(height: 4),
+                    Text('총 배송비: ${deliveryFee}원',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                    SizedBox(height: 4),
+                    Text('최종 결제 금액: ${getFinalPrice()}원',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                    SizedBox(height: 4),
                 ],
               ),
             ),
@@ -290,9 +314,7 @@ Padding(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('최종 결제 금액 가격',
-                      style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('이름'))),
-                  SizedBox(height: 4),
+                  
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize:

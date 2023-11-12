@@ -46,7 +46,7 @@
 		</data>
 		<key>Frameworks/App.framework/App</key>
 		<data>
-		ERYeA5S82vREoXes6B+ubELZaAo=
+		6XoxpL/AXfvcX3tT/x2rTjETcO4=
 		</data>
 		<key>Frameworks/App.framework/Info.plist</key>
 		<data>
@@ -54,15 +54,15 @@
 		</data>
 		<key>Frameworks/App.framework/_CodeSignature/CodeResources</key>
 		<data>
-		a4QgutUoJ4Tv+oS640jzOdEWHaY=
+		adTzVBe6kltMdNK8N/Ov/HikJuE=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
 		<data>
-		rjgkF8qo93VCgMz2DMGeT1Z1ydg=
+		gTzANuvmxDSs81hUx8S/reSRvvI=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.json</key>
 		<data>
-		9kNfTSMbSA4uSRVHU6jab1BQ2Uc=
+		fU5dnOiWhzZ8iZS2FcphHDJE4Xc=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/FontManifest.json</key>
 		<data>
@@ -132,6 +132,18 @@
 		<data>
 		FLjHaFqtqxR7Ae/STb8mVt7XNoY=
 		</data>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_large.png</key>
+		<data>
+		s0UsZToUF2x5qJOU7WiPyKB3u6g=
+		</data>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_medium.png</key>
+		<data>
+		nZ0hbqAXmWeab6jFltbd8xTiI9U=
+		</data>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_small.png</key>
+		<data>
+		Tb34NjyX6sjwIi7646uw+w/FORg=
+		</data>
 		<key>Frameworks/App.framework/flutter_assets/assets/images/recommended1.jpeg</key>
 		<data>
 		J89LG/tn8GYHPUujAZblz4RlhxA=
@@ -174,7 +186,7 @@
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/kernel_blob.bin</key>
 		<data>
-		ZcZXDSKS59okxs9gz6d07YwWXrk=
+		248pL8SsJrI4GqttCkqFF+Sv4k4=
 		</data>
 		<key>Frameworks/App.framework/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -357,7 +369,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			peV25CglG1jzn4NwqEId7Cu8I7BUIS+GpOR5OVeFpjQ=
+			eszOP2Ab15GO6JZe+1sN4/5r1yT3C8m+DJf8DlFd+DY=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/Info.plist</key>
@@ -371,21 +383,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			t66Ryx2mj47snCoFwp9mRnzJjKEJ5+YhZufFeKVH1ag=
+			EAnvZeEZmyWef081CKRliDqRQoefUAKrpaVhkILl+e8=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			WQJqmMbQINr3z+PBO9BNK3genzzszoOhWeASo5uavNw=
+			so0YUfnI/k/I3UlbWZdINMlnwwyCAij3aU9iwuY8W+4=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/AssetManifest.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			1I/f4irBRY483HrTncnPKPF7fuKzVuBL1meCrOH0fFY=
+			V8gwRHkfhZBY/UJoWt9M/HNHaLTJdh+ki3SB+QVMX18=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/FontManifest.json</key>
@@ -507,6 +519,27 @@
 			BEkXT6WSjUHdEXLIncIWk3tU+yjBXntfQhp0fHaYBQQ=
 			</data>
 		</dict>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_large.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			sLtgubQepi2SXqYIgyM+tlStB3G7du914TZHzFk81qk=
+			</data>
+		</dict>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_medium.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			sMgIv/f/SWe1v3o+PQV8QfAYU/DSBCLW7X47f3pG3Ys=
+			</data>
+		</dict>
+		<key>Frameworks/App.framework/flutter_assets/assets/images/payment_icon_yellow_small.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			D6rj3eORYb8Ngd6Ed2d4XCpMSL3+O035qSMYm6HmJh4=
+			</data>
+		</dict>
 		<key>Frameworks/App.framework/flutter_assets/assets/images/recommended1.jpeg</key>
 		<dict>
 			<key>hash2</key>
@@ -581,7 +614,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Ibnm42tsyz/9R5JR9nIZH6bPgicejtqeeuONdsNCb+k=
+			IckdzwT0u1NHKZ7CNBznuO2mV7ZJRLJw4gIFidWgf9M=
 			</data>
 		</dict>
 		<key>Frameworks/App.framework/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
