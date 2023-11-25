@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'users_model.dart';
 
 class ProductService {
   final String _baseUrl = 'https://ka8d596e67406a.user-app.krampoline.com/api';
@@ -231,9 +234,49 @@ Future<Map<String, dynamic>> getCategoryProducts(String category, int page, int 
     }
   }
 
+  // 로그아웃 api
+  Future<void> logout() async {
+    final String url = '$_baseUrl/auth/logout';
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.post(Uri.parse(url), headers: headers);
+
+      if (response.statusCode != 200) {
+        throw Exception('로그아웃 실패');
+      }
+    } catch (error) {
+      print('로그아웃 에러: $error');
+      rethrow;
+    }
+  }
+
+
+// 마이페이지 조회 api
+Future<Map<String, dynamic>> getMyPageInfo(BuildContext context) async {
+  final String url = '$_baseUrl/mypage';
+  final token = Provider.of<UsersModel>(context, listen: false).token;
+
+  final Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final decodedBody = utf8.decode(response.bodyBytes);
+      return json.decode(decodedBody);
+    } else {
+      throw Exception('Failed to load my page info');
+    }
+  } catch (error) {
+    print('Error occurred: $error');
+    rethrow;
+  }
 }
-
-
-
-
+}
 
