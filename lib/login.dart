@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'font_util.dart';
 import 'test.dart';
 import 'service/api_service.dart';
+import 'service/users_model.dart';
+import 'package:provider/provider.dart';
+import 'main.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
 
   // 로그인 함수
-  void _login() async {
+void _login() async {
     try {
       ProductService productService = ProductService();
       final response = await productService.login(
@@ -22,9 +25,16 @@ class _LoginPageState extends State<LoginPage> {
         passwordController.text,
       );
 
-      // 토큰 저장 또는 다른 작업 수행
+      // Provider를 사용하여 토큰 저장
+      Provider.of<UsersModel>(context, listen: false).setToken(response['accessToken']['value']);
+
       print('로그인 성공: ${response['accessToken']['value']}');
-      // 여기에서 다음 페이지로 이동하거나 사용자 정보를 저장할 수 있습니다.
+
+      // 로그인 성공 후 MainScreen으로 이동
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScreen()),
+        (Route<dynamic> route) => false,
+      );
     } catch (e) {
       print('로그인 실패: $e');
     }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // 필요한 login.dart 페이지를 import
+import 'login.dart';
 import 'sign_up.dart';
 import 'main.dart';
+import 'service/users_model.dart';
+import 'package:provider/provider.dart';
+import 'my_profile.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -30,14 +33,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          // person 아이콘에 IconButton을 사용합니다.
           icon: Icon(Icons.person),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => LoginPage()), // LoginPage로 이동하는 로직을 추가
-            );
+            // 로그인 상태 확인
+            if (Provider.of<UsersModel>(context, listen: false).isLoggedIn) {
+              // 로그인 상태일 때 MyProfilePage로 이동
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfilePage()));
+            } else {
+              // 로그인 상태가 아닐 때 LoginPage로 이동
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+            }
           },
         ),
         SizedBox(width: 20),
