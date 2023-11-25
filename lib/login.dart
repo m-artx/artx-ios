@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'font_util.dart';
 import 'test.dart';
+import 'service/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,6 +9,26 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  // 로그인 함수
+  void _login() async {
+    try {
+      ProductService productService = ProductService();
+      final response = await productService.login(
+        usernameController.text,
+        passwordController.text,
+      );
+
+      // 토큰 저장 또는 다른 작업 수행
+      print('로그인 성공: ${response['accessToken']['value']}');
+      // 여기에서 다음 페이지로 이동하거나 사용자 정보를 저장할 수 있습니다.
+    } catch (e) {
+      print('로그인 실패: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 50),
               // 아이디 TextField
               TextField(
+                controller: usernameController, // 컨트롤러 연결
                 decoration: InputDecoration(
                   hintText: '아이디',
                   border: OutlineInputBorder(
@@ -45,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 16),
               // 비밀번호 TextField
               TextField(
+                controller: passwordController, // 컨트롤러 연결
                 decoration: InputDecoration(
                   hintText: '비밀번호',
                   border: OutlineInputBorder(
@@ -74,9 +97,7 @@ Container(
         ),
       ),
     ),
-    onPressed: () {
-      // 로그인 기능 구현
-    },
+    onPressed: _login,
     child: Text(
       '로그인',
       style: TextStyle(color: Colors.black, fontFamily: getFontFamily('로그인')),

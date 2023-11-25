@@ -62,6 +62,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "flutter_provider",
+      "rootUri": "file:///Users/hamchaehyeon/.pub-cache/hosted/pub.dev/flutter_provider-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///Users/hamchaehyeon/development/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -194,7 +200,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-11-11T06:51:09.447144Z",
+  "generated": "2023-11-18T05:03:48.602291Z",
   "generator": "pub",
   "generatorVersion": "3.1.5"
 }
