@@ -35,9 +35,9 @@ class ProductService {
 
 
   // 카테고리별 작품 조회
-  Future<Map<String, dynamic>> getCategoryProducts(String category, int page, int size, {String? sort}) async {
+Future<Map<String, dynamic>> getCategoryProducts(String category, int page, int size, {String? sort}) async {
   var queryParams = {
-    'type': category,
+    'category': category, // 'type' 대신 'category' 사용
     'page': page.toString(),
     'size': size.toString(),
   };
@@ -51,33 +51,31 @@ class ProductService {
     'Content-Type': 'application/json',
   };
 
-    print('Requesting: $uri');
+  print('Requesting: $uri');
+  try {
     final response = await http.get(uri, headers: headers);
 
-    try {
-      final response =
-          await http.get(uri, headers: headers); // 여기에서 uri 변수를 사용합니다.
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final String decodedBody = utf8.decode(response.bodyBytes);
-        final Map<String, dynamic> responseData = json.decode(decodedBody);
-        return responseData;
-      } else {
-        throw Exception('Failed to load category products');
-      }
-    } catch (error) {
-      print('Error occurred: $error');
-      rethrow;
+    if (response.statusCode == 200) {
+      final String decodedBody = utf8.decode(response.bodyBytes);
+      final Map<String, dynamic> responseData = json.decode(decodedBody);
+      return responseData;
+    } else {
+      throw Exception('Failed to load category products');
     }
+  } catch (error) {
+    print('Error occurred: $error');
+    rethrow;
   }
+}
+
 
 // 장바구니 전체 조회
   Future<Map<String, dynamic>> getCartDetails(int cartId) async {
 
-    final String url = '$_baseUrl/carts/$cartId';
+    final String url = '$_baseUrl/cart';
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
@@ -199,6 +197,36 @@ class ProductService {
       }
     } catch (error) {
       print('Error occurred: $error');
+      rethrow;
+    }
+  }
+
+
+  // 로그인 api
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    final String url = '$_baseUrl/auth/login';
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    final Map<String, dynamic> body = {
+      'username': username,
+      'password': password,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('로그인 실패');
+      }
+    } catch (error) {
+      print('로그인 에러: $error');
       rethrow;
     }
   }

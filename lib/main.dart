@@ -5,6 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
 import 'side_menu.dart';
 import 'font_util.dart';
+import 'package:provider/provider.dart';
+import 'service/users_model.dart';
 
 
 void main() => runApp(MyApp());
@@ -12,8 +14,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: IntroScreen(),
+    // ChangeNotifierProvider를 사용하여 UsersModel을 제공
+    return ChangeNotifierProvider(
+      create: (context) => UsersModel(),
+      child: MaterialApp(
+        home: IntroScreen(),
+      ),
     );
   }
 }
