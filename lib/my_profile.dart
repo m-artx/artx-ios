@@ -1,3 +1,4 @@
+import 'package:artx_ios/change_pw.dart';
 import 'package:artx_ios/main.dart';
 import 'package:artx_ios/test.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class MyProfilePage extends StatelessWidget {
                 // 각 버튼의 스타일 및 크기를 수정합니다.
                 _buildButton(context, '개인정보 관리', customer_service()),
                 const SizedBox(height: 16),
-                _buildButton(context, '비밀번호 변경', TestPage()),
+                _buildButton(context, '비밀번호 변경', ChangePwPage()),
                 const SizedBox(height: 16),
                 _buildButton(context, '주문/배송정보', TestPage()),
                 const SizedBox(height: 16),

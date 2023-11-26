@@ -116,7 +116,7 @@ class SideMenu extends StatelessWidget {
                     } else if (subItem == '비밀번호 변경') {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => change_pw()),
+                        MaterialPageRoute(builder: (context) => ChangePwPage()),
                       );
                     } else if (subItem == '주문/배송정보') {
                       Navigator.push(
