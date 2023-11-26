@@ -76,30 +76,27 @@ Future<Map<String, dynamic>> getCategoryProducts(String category, int page, int 
 
 
 // 장바구니 전체 조회
-  Future<Map<String, dynamic>> getCartDetails(int cartId) async {
+Future<Map<String, dynamic>> getCartDetails(String token) async {
+        final String url = '$_baseUrl/cart';
+        final Map<String, String> headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+        };
 
-    final String url = '$_baseUrl/cart';
-    final Map<String, String> headers = {
-      'Content-Type': 'application/json',
-    };
+        try {
+            final response = await http.get(Uri.parse(url), headers: headers);
 
-    try {
-      final response = await http.get(Uri.parse(url), headers: headers);
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        final String decodedBody = utf8.decode(response.bodyBytes);
-        return json.decode(decodedBody);
-      } else {
-        throw Exception('장바구니 정보를 불러오는 데 실패했습니다.');
-      }
-    } catch (error) {
-      print('에러 발생: $error');
-      rethrow;
+            if (response.statusCode == 200) {
+                final decodedBody = utf8.decode(response.bodyBytes);
+                return json.decode(decodedBody);
+            } else {
+                throw Exception('장바구니 정보를 불러오는 데 실패했습니다.');
+            }
+        } catch (error) {
+            print('에러 발생: $error');
+            rethrow;
+        }
     }
-  }
 
   // 장바구니 상품 수량 증가
   Future<void> increaseCartItemQuantity(int cartId, int productId) async {

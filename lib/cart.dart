@@ -4,6 +4,9 @@ import 'side_menu.dart';
 import 'font_util.dart';
 import 'service/api_service.dart';
 import 'payment.dart';
+import 'package:provider/provider.dart';
+import 'service/users_model.dart';
+
 
 class CartPage extends StatefulWidget {
   @override
@@ -21,34 +24,33 @@ class _CartPageState extends State<CartPage> {
   }
 
   // API를 통해 장바구니 정보를 불러오는 메소드
-  Future<void> _fetchCartItems() async {
-    try {
-      // 예시로 1번 카트 아이디를 사용합니다. 실제로는 동적으로 설정할 수 있어야 합니다.
-      final response = await _productService.getCartDetails(1);
+Future<void> _fetchCartItems() async {
+  try {
+    final token = Provider.of<UsersModel>(context, listen: false).token;
+    final response = await _productService.getCartDetails(token);
 
-      // API 응답에서 장바구니 아이템 리스트를 추출합니다.
-      final List<dynamic> cartData = response['cartItemDetails'];
+    // response에서 cartItemDetails를 가져오고, null이면 빈 리스트를 사용합니다.
+    final List<dynamic> cartData = response['cartItemDetails'] ?? [];
 
-      // CartItem 리스트를 생성합니다.
-      final List<CartItem> loadedCartItems = cartData.map((itemData) {
-        return CartItem(
-          productTitle: itemData['productTitle'] ?? '제품명 없음', //null 처리, 기본이름 제공
-          price: itemData['productPrice'], // API 문서에 따라 productPrice로 변경됨
-          quantity: itemData['cartProductQuantity'],
-          image: itemData['productRepresentativeImage'], // 이미지 URL 추가
-          cartId: itemData['cartId'], // cartId를 API 응답에서 추출해야 함
-          productId: itemData['productId'],
-        );
-      }).toList();
+    final List<CartItem> loadedCartItems = cartData.map((itemData) {
+      return CartItem(
+        productTitle: itemData['productTitle'] ?? '제품명 없음',
+        price: itemData['productPrice'],
+        quantity: itemData['cartProductQuantity'],
+        image: itemData['productRepresentativeImage'],
+        cartId: itemData['cartId'],
+        productId: itemData['productId'],
+      );
+    }).toList();
 
-      // 상태 업데이트
-      setState(() {
-        cartItems = loadedCartItems;
-      });
-    } catch (error) {
-      print('장바구니 정보 불러오기 실패: $error');
-    }
+    // 상태 업데이트
+    setState(() {
+      cartItems = loadedCartItems;
+    });
+  } catch (error) {
+    print('장바구니 정보 불러오기 실패: $error');
   }
+}
 
   @override
   Widget build(BuildContext context) {

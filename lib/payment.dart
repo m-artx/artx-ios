@@ -5,6 +5,9 @@ import 'font_util.dart';
 import 'service/api_service.dart';
 import 'cart.dart';
 import 'payment_kakaopay.dart';
+import 'package:provider/provider.dart';
+import 'service/users_model.dart';
+
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -33,6 +36,8 @@ class _PaymentPageState extends State<PaymentPage> {
     return getTotalProductPrice() + deliveryFee;
   }
 
+  String userId = ''; // 현재 로그인한 사용자의 ID
+
   @override
   void initState() {
     super.initState();
@@ -41,11 +46,10 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void _fetchUserData() async {
-    // 임시 사용자 ID, 실제 앱에서는 동적으로 관리해야 합니다.
-    String userId = "63b1fdff-b1fb-4141-bb4c-5342a81bd7b0";
-
     try {
-      var userDetails = await _productService.getUserDetails(userId);
+      final userModel = Provider.of<UsersModel>(context, listen: false);
+      userId = userModel.userId; // 현재 로그인한 사용자의 ID를 저장합니다.
+      var userDetails = await _productService.getUserDetails(userModel.token);
       setState(() {
         username = userDetails['username'] ?? '';
         phoneNumber = userDetails['phoneNumber'] ?? '';
@@ -57,34 +61,37 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
+
   Future<void> _fetchCartItems() async {
-    try {
-      // 임시로 1번 카트 아이디 사용
-      final response = await _productService.getCartDetails(1);
-      final List<dynamic> cartData = response['cartItemDetails'];
+  try {
+    final token = Provider.of<UsersModel>(context, listen: false).token;
+        final response = await _productService.getCartDetails(token);
 
-      final List<CartItem> loadedCartItems = cartData.map((itemData) {
-        return CartItem(
-          productTitle: itemData['productTitle'] ?? '제품명 없음',
-          price: itemData['productPrice'],
-          quantity: itemData['cartProductQuantity'],
-          image: itemData['productRepresentativeImage'],
-          cartId: itemData['cartId'],
-          productId: itemData['productId'],
-        );
-      }).toList();
+    final List<dynamic> cartData = response['cartItemDetails'];
 
-      setState(() {
-        cartItems = loadedCartItems;
-      });
-    } catch (error) {
-      print('장바구니 정보 불러오기 실패: $error');
-    }
+    final List<CartItem> loadedCartItems = cartData.map((itemData) {
+      return CartItem(
+        productTitle: itemData['productTitle'] ?? '제품명 없음',
+        price: itemData['productPrice'],
+        quantity: itemData['cartProductQuantity'],
+        image: itemData['productRepresentativeImage'],
+        cartId: itemData['cartId'],
+        productId: itemData['productId'],
+      );
+    }).toList();
+
+    setState(() {
+      cartItems = loadedCartItems;
+    });
+  } catch (error) {
+    print('장바구니 정보 불러오기 실패: $error');
   }
+}
+
 
   void _createOrder() async {
-    // 임시 주문 데이터 - 실제 앱에서는 사용자 입력을 통해 데이터를 받아야 합니다.
-    String userId = "63b1fdff-b1fb-4141-bb4c-5342a81bd7b0";
+    // 현재 로그인한 사용자의 ID를 가져옵니다.
+    final userId = Provider.of<UsersModel>(context, listen: false).userId;
     List<Map<String, dynamic>> orderDetails = [
       {"productId": 0, "productQuantity": 0},
       // 다른 상품들 추가 가능
@@ -98,7 +105,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     try {
       var response = await _productService.createOrder(
-        userId: userId,
+        userId: userId, // 여기서 userId를 사용합니다.
         orderDetails: orderDetails,
         deliveryDetail: deliveryDetail,
       );
