@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
 import 'font_util.dart'; // font_util.dart를 임포트합니다.
+import 'my_profile.dart';
 
 class ChangePwPage extends StatelessWidget {
   @override
@@ -16,6 +17,19 @@ class ChangePwPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+                child: Text(
+                  '비밀번호 변경',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontFamily: getFontFamily('비밀번호 변경'), // 폰트 적용
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              Divider(color: Colors.white),
+              SizedBox(height: 16), // 검은색 가로줄
               _buildTextField('현재 비밀번호', true),
               _buildTextField('새로운 비밀번호', true),
               _buildTextField('새로운 비밀번호 확인', true),
@@ -33,7 +47,7 @@ class ChangePwPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // 변경 로직 구현
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyProfilePage()));
                   },
                   child: Text(
                     '비밀번호 변경하기',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'font_util.dart'; // font_util.dart를 임포트합니다.
+import 'login.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -77,8 +78,8 @@ class _SignupPageState extends State<SignupPage> {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              primary: Colors.white,
-              onPrimary: Colors.black,
+              primary: Colors.black,
+              onPrimary: Colors.white,
               minimumSize: Size(100, 58), // 버튼의 높이를 입력 필드와 일치시킵니다.
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기
@@ -164,8 +165,8 @@ class _SignupPageState extends State<SignupPage> {
               Center(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                     minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -173,7 +174,9 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
                   child: Text(
                     'ARTX 입장하기',
                     style: TextStyle(fontSize: 18, fontFamily: getFontFamily('회원가입')),

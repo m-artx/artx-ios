@@ -25,7 +25,8 @@ class customer_service extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-          Divider(color: Colors.white), // 검은색 가로줄
+          Divider(color: Colors.white),
+          SizedBox(height: 16), // 검은색 가로줄
           ..._buildButtons(),
         ],
       ),
