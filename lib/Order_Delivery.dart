@@ -1,75 +1,147 @@
 import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
-import 'test.dart';
+import 'font_util.dart';
 
-class Order_Delivery extends StatelessWidget {
-  final List<Map<String, dynamic>> orders = [
-    {
-      'date': '2023-06-01',
-      'amount': '10000',
-      'image': 'assets/images/product1.jpeg', // 이미지 주석 해제
-      'title': '상품 1'
-    },
-    {
-      'date': '2023-05-30',
-      'amount': '20000',
-      // 'image': 'assets/images/product2.jpeg', // 이미지 주석 해제
-      'title': '상품 2'
-    },
-    // 추가적인 주문 데이터...
+class Order_Delivery extends StatefulWidget {
+  @override
+  _PaymentPageState createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<Order_Delivery> {
+  String username = '함채현';
+  String phoneNumber = '010-1234-5678';
+  String address = '서울시 은평구 응암2동';
+  String addressDetail = '힐스테이트 101동 101호';
+  String deliveryNumber = '대한통운 582465104596';
+
+  List<CartItem> cartItems = [
+    CartItem(
+      productTitle: '소망',
+      price: 45000,
+      quantity: 2,
+      image: 'assets/images/test.png',
+    ),
+    CartItem(
+      productTitle: '마더',
+      price: 45000,
+      quantity: 1,
+      image: 'assets/images/test2.png',
+    ),
   ];
+
+  int getTotalProductPrice() {
+    return cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+  }
+
+  final int deliveryFee = 5000;
+
+  int getFinalPrice() {
+    return getTotalProductPrice() + deliveryFee;
+  }
+
+  String _selectedPaymentMethod = 'kakaoPay';
 
   @override
   Widget build(BuildContext context) {
-    // 날짜순으로 오름차순 정렬 아래 주석 없애세오
-    // orders.sort((a, b) => a['date'].compareTo(b['date']));
-
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: SideMenu(),
-      backgroundColor: Colors.grey,
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          var order = orders[index];
-          return Container(
-            margin: EdgeInsets.all(10), // Adjust the margin as needed
-            decoration: BoxDecoration(
-              color: Colors.white, // White color background
-              border: Border.all(color: Colors.white), // White border
-              borderRadius: BorderRadius.circular(10), // Rounded corners
-              boxShadow: [
-                // Optional: Add shadow for some depth effect
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
+      backgroundColor: Color.fromARGB(255, 23, 23, 23),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('주문내역', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: getFontFamily('주문하기'))),
+              ),
             ),
-            child: ListTile(
-              /*leading: Image.asset(order['image'],
-                  width: 50, height: 50), // Image uncommented
-              title:
-                  Text(order['title'], style: TextStyle(color: Colors.black)),
-              subtitle: Text(
-                '₩${order['amount']} - ${order['date']}',
-                style: TextStyle(color: Colors.black),
-              ),*/
-
-              onTap: () {
-                // Navigate to detailed order delivery information page.
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TestPage()),
-                );
-              },
+            Divider(color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('주문고객', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: getFontFamily('주문고객'))),
             ),
-          );
-        },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(username, style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(username))),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(phoneNumber, style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(phoneNumber))),
+            ),
+            Divider(color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('배송정보', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: getFontFamily('배송정보'))),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(address, style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(address))
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(addressDetail, style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(addressDetail))),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('운송장 정보', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: getFontFamily('배송정보'))),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(deliveryNumber, style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(addressDetail))),
+            ),
+            Divider(color: Colors.white),
+            // 주문 작품 정보
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: cartItems.map((item) => ListTile(
+                  leading: Image.asset(item.image ?? 'assets/images/default.png', width: 50, height: 50),
+                  title: Text(item.productTitle ?? '제품명 없음', style: TextStyle(color: Colors.white, fontFamily: getFontFamily(item.productTitle ?? '제품명 없음'))),
+                  subtitle: Text('${item.price}원 x ${item.quantity}', style: TextStyle(color: Colors.white, fontFamily: getFontFamily('가격 정보'))),
+                )).toList(),
+              ),
+            ),
+            Divider(color: Colors.white),
+            // 결제 정보
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(' ', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(' '))),
+                  Text('결제 정보', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: getFontFamily('결제 정보'))),
+                  Text(' ', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(' '))),
+                  Text('총 작품 금액: ${getTotalProductPrice()}원', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('총 작품 금액'))),
+                  Text('배송비: ${deliveryFee}원', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('배송비'))),
+                  Text('총 결제 금액: ${getFinalPrice()}원', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily('총 결제 금액'))),
+                  Text(' ', style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: getFontFamily(' '))),
+                ],
+              ),
+            ),
+            Divider(color: Colors.white),
+            
+          ],
+        ),
       ),
     );
   }
+}
+
+class CartItem {
+  String? productTitle;
+  int price;
+  int quantity;
+  String? image;
+
+  CartItem({
+    this.productTitle,
+    required this.price,
+    required this.quantity,
+    this.image,
+  });
 }

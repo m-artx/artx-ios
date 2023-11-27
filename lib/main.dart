@@ -7,16 +7,18 @@ import 'side_menu.dart';
 import 'font_util.dart';
 import 'package:provider/provider.dart';
 import 'service/users_model.dart';
-
+import 'service/api_service.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // ChangeNotifierProvider를 사용하여 UsersModel을 제공
-    return ChangeNotifierProvider(
-      create: (context) => UsersModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UsersModel()),
+        Provider(create: (context) => ProductService()),
+      ],
       child: MaterialApp(
         home: IntroScreen(),
       ),

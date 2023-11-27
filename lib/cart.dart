@@ -1,270 +1,186 @@
 import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
-import 'font_util.dart';
+import 'dart:ui';
 import 'service/api_service.dart';
-import 'payment.dart';
+import 'font_util.dart';
 
-class CartPage extends StatefulWidget {
+class Product extends StatefulWidget {
+  final String productId;
+
+  Product({Key? key, required this.productId}) : super(key: key);
+
   @override
-  _CartPageState createState() => _CartPageState();
+  _ProductState createState() => _ProductState();
 }
 
-class _CartPageState extends State<CartPage> {
-  late List<CartItem> cartItems = [];
-  final ProductService _productService = ProductService(); // 서비스 인스턴스 생성
+class _ProductState extends State<Product> {
+  bool _isImageZoomed = false;
+  Map<String, dynamic>? _productDetails;
 
   @override
   void initState() {
     super.initState();
-    _fetchCartItems(); // initState에서 장바구니 아이템들을 불러옵니다.
+    _fetchProductDetails();
   }
 
-  // API를 통해 장바구니 정보를 불러오는 메소드
-  Future<void> _fetchCartItems() async {
+  Future<void> _fetchProductDetails() async {
+    ProductService productService = ProductService();
     try {
-      // 예시로 1번 카트 아이디를 사용합니다. 실제로는 동적으로 설정할 수 있어야 합니다.
-      final response = await _productService.getCartDetails(1);
-
-      // API 응답에서 장바구니 아이템 리스트를 추출합니다.
-      final List<dynamic> cartData = response['cartItemDetails'];
-
-      // CartItem 리스트를 생성합니다.
-      final List<CartItem> loadedCartItems = cartData.map((itemData) {
-        return CartItem(
-          productTitle: itemData['productTitle'] ?? '제품명 없음', //null 처리, 기본이름 제공
-          price: itemData['productPrice'], // API 문서에 따라 productPrice로 변경됨
-          quantity: itemData['cartProductQuantity'],
-          image: itemData['productRepresentativeImage'], // 이미지 URL 추가
-          cartId: itemData['cartId'], // cartId를 API 응답에서 추출해야 함
-          productId: itemData['productId'],
-        );
-      }).toList();
-
-      // 상태 업데이트
-      setState(() {
-        cartItems = loadedCartItems;
-      });
-    } catch (error) {
-      print('장바구니 정보 불러오기 실패: $error');
+      final details = await productService.getProductDetails(widget.productId);
+      if (details != null && details.isNotEmpty) {
+        setState(() {
+          _productDetails = details;
+        });
+      }
+    } catch (e) {
+      print('Error fetching product details: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_productDetails == null) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
+
+    String imageUrl = _productDetails!['productRepresentativeImage'] ?? 'assets/images/image1.jpeg';
+    String name = _productDetails!['productTitle'] ?? '제품 이름 없음';
+    String price = "${_productDetails!['productPrice']}원";
+    String productDescription = _productDetails!['productDescription'] ?? '상품 설명이 없습니다.';
+
+    ImageProvider imageProvider;
+    if (_productDetails != null && _productDetails!['productRepresentativeImage'] != null) {
+      imageProvider = NetworkImage(_productDetails!['productRepresentativeImage']);
+    } else {
+      imageProvider = AssetImage('assets/images/image1.jpeg');
+    }
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 23, 23, 23),
       appBar: CustomAppBar(),
       drawer: SideMenu(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ...cartItems.map((item) => CartItemWidget(
-              item: item,
-              productService: _productService,
-              onQuantityChanged: () => setState(() {}), // 수량 변경 시 상태 갱신
-            )).toList(),
-            CartSummary(cartItems: cartItems),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color.fromARGB(255, 23, 23, 23), // 이전 배경색 유지
-        child: SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white, // 버튼 배경색
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                elevation: 0, // 버튼 그림자 제거
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0), // 테두리 둥글기 제거
-                ),
-              ),
-              child: Text(
-                '결제하기',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: getFontFamily('결제하기'),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaymentPage()),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CartItem {
-  final String? productTitle;
-  final int price;
-  final int quantity;
-  final String? image;
-  final int cartId; // cartId 속성 추가
-  final int productId; // productId 속성 추가
-
-  CartItem({
-    this.productTitle,
-    required this.price,
-    required this.quantity,
-    this.image,
-    required this.cartId, // cartId는 필수 인자로 변경
-    required this.productId, // productId는 필수 인자로 변경
-  });
-}
-
-class CartItemWidget extends StatefulWidget {
-  final CartItem item;
-  final ProductService productService; // ProductService 추가
-  final VoidCallback onQuantityChanged; // 수량 변경 콜백 
-
-  CartItemWidget({
-    required this.item, 
-    required this.productService,
-    required this.onQuantityChanged // 콜백 추가
-    });
-
-  @override
-  _CartItemWidgetState createState() => _CartItemWidgetState();
-}
-
-class _CartItemWidgetState extends State<CartItemWidget> {
-  late int quantity;
-  late ProductService _productService; 
-
-  @override
-  void initState() {
-    super.initState();
-    quantity = widget.item.quantity;
-    _productService = widget.productService; // _productService 초기화
-  }
-
-  void _increaseQuantity() async {
-    try {
-      await _productService.increaseCartItemQuantity(
-          widget.item.cartId, widget.item.productId);
-      setState(() {
-        quantity++;
-      });
-      widget.onQuantityChanged(); // 수량 변경 시 콜백 호출
-    } catch (error) {
-      print('수량 증가 에러: $error');
-    }
-  }
-
-  void _decreaseQuantity() async {
-    if (quantity > 1) {
-      // 수량이 1보다 클 때만 감소 가능
-      try {
-        await _productService.decreaseCartItemQuantity(
-            widget.item.cartId, widget.item.productId);
-        setState(() {
-          quantity--;
-        });
-        widget.onQuantityChanged(); // 수량 변경 시 콜백 호출
-      } catch (error) {
-        print('수량 감소 에러: $error');
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Image.network(
-              widget.item.image ??
-                  '기본이미지URL', // item.image가 null일 경우 기본 이미지 URL 사용
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.item.productTitle ?? '제품명 없음',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    '${widget.item.price}원',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: _decreaseQuantity,
+      body: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isImageZoomed = !_isImageZoomed;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                            ),
+                          ),
+                        ),
                       ),
-                      Text('$quantity'),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: _increaseQuantity,
+                      ListTile(
+                        title: Text(
+                          name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: getFontFamily(name),
+                          ),
+                        ),
+                        subtitle: Text(
+                          price,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: getFontFamily(price),
+                          ),
+                        ),
+                        trailing: Icon(Icons.shopping_cart, color: Colors.white),
+                      ),
+                      TextButton(
+                        child: Text(
+                          '상품 상세설명',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: getFontFamily('상품 상세설명'),
+                          ),
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                height: 300,
+                                child: Center(
+                                  child: Text(productDescription),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                // 제거 로직
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// CartSummary를 실제 내용으로 채워넣기
-class CartSummary extends StatelessWidget {
-  final List<CartItem> cartItems;
-
-  CartSummary({required this.cartItems});
-
-  @override
-  Widget build(BuildContext context) {
-    int total =
-        cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
-
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('총 상품금액'),
-              Text('${total}원'),
+              Container(
+                height: 60,
+                margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
+                child: Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.white),
+                    child: Text(
+                      '결제하기',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: getFontFamily('결제하기'),
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              )
             ],
           ),
-          // 추가 비용 항목들을 여기에 추가할 수 있습니다.
+          if (_isImageZoomed)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isImageZoomed = false;
+                  });
+                },
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.7),
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 30.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 10),
+                        ),
+                        child: Image.network(imageUrl), // 수정됨
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
   }
+
 }
+
+

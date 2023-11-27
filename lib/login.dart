@@ -5,6 +5,7 @@ import 'service/api_service.dart';
 import 'service/users_model.dart';
 import 'package:provider/provider.dart';
 import 'main.dart';
+import 'sign_up.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -163,7 +164,7 @@ Container(
                   TextButton(
                     onPressed: () {
                       // 회원가입 페이지로 이동
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TestPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
                     },
                     child: Text(
                       '회원가입',
