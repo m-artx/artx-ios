@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'custom_app_bar.dart';
 import 'side_menu.dart';
@@ -45,11 +47,19 @@ class _ProductState extends State<Product> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+    
 
-    String imageUrl = _productDetails!['productRepresentativeImage'] ?? 'https://example.com/default_image.png'; // 예시 URL을 실제 URL로 교체해야 함
+    String imageUrl = _productDetails!['productRepresentativeImage'] ?? 'assets/images/image1.jpeg';
     String name = _productDetails!['productTitle'] ?? '제품 이름 없음';
     String price = "${_productDetails!['productPrice']}원";
     String productDescription = _productDetails!['productDescription'] ?? '상품 설명이 없습니다.';
+
+    ImageProvider imageProvider;
+    if (_productDetails != null && _productDetails!['productRepresentativeImage'] != null) {
+      imageProvider = NetworkImage(_productDetails!['productRepresentativeImage']);
+    } else {
+      imageProvider = AssetImage('assets/images/image1.jpeg');
+    }
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 23, 23, 23),
@@ -74,8 +84,8 @@ class _ProductState extends State<Product> {
                           height: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(imageUrl), // 수정됨
                               fit: BoxFit.cover,
+                              image: imageProvider,
                             ),
                           ),
                         ),
@@ -127,37 +137,18 @@ class _ProductState extends State<Product> {
               Container(
                 height: 60,
                 margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.white),
-                        child: Text(
-                          '결제하기',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: getFontFamily('결제하기'),
-                          ),
-                        ),
-                        onPressed: () {},
+                child: Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.white),
+                    child: Text(
+                      '결제하기',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: getFontFamily('결제하기'),
                       ),
                     ),
-                    SizedBox(width: 30),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.yellow),
-                        child: Text(
-                          '카카오 결제',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: getFontFamily('카카오 결제'),
-                          ),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
+                    onPressed: () {},
+                  ),
                 ),
               )
             ],
@@ -193,4 +184,5 @@ class _ProductState extends State<Product> {
   }
 
 }
+
 

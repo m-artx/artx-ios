@@ -1,3 +1,4 @@
+import 'package:artx_ios/Order_Delivery.dart';
 import 'package:artx_ios/change_pw.dart';
 import 'package:artx_ios/main.dart';
 import 'package:artx_ios/test.dart';
@@ -75,7 +76,7 @@ class MyProfilePage extends StatelessWidget {
                 const SizedBox(height: 16),
                 _buildButton(context, '비밀번호 변경', ChangePwPage()),
                 const SizedBox(height: 16),
-                _buildButton(context, '주문/배송정보', TestPage()),
+                _buildButton(context, '주문/배송정보', Order_Delivery()),
                 const SizedBox(height: 16),
                 _buildButton(context, '배송지관리', TestPage()),
                 const SizedBox(height: 16),

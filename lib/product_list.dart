@@ -69,32 +69,32 @@ class _ProductListState extends State<ProductList> {
             ),
             SizedBox(height: 20),
             Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: currentPage > 0 ? () {
-            setState(() {
-              currentPage--;
-              _fetchProducts();
-            });
-          } : null, // 첫 페이지에서는 이전 버튼 비활성화
-        ),
-        Text(
-          "페이지 $currentPage",
-          style: TextStyle(color: Colors.white),
-        ),
-        IconButton(
-          icon: Icon(Icons.arrow_forward, color: Colors.white),
-          onPressed: !isLastPage ? () { // 마지막 페이지가 아닐 경우에만 다음 페이지 함수 실행
-            setState(() {
-              currentPage++;
-              _fetchProducts();
-            });
-          } : null, // 마지막 페이지에서는 다음 버튼 비활성화
-        ),
-      ],
-    ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: currentPage > 0 ? () {
+                    setState(() {
+                      currentPage--;
+                      _fetchProducts();
+                    });
+                  } : null,
+                ),
+                Text(
+                  "페이지 $currentPage",
+                  style: TextStyle(color: Colors.white),
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward, color: Colors.white),
+                  onPressed: !isLastPage ? () {
+                    setState(() {
+                      currentPage++;
+                      _fetchProducts();
+                    });
+                  } : null,
+                ),
+              ],
+            ),
             SizedBox(height: 20),
           ],
         ),
@@ -103,86 +103,88 @@ class _ProductListState extends State<ProductList> {
   }
 
 Widget _buildProductGridItem(int index) {
-    var product = products[index];
-    String productId = product['productId'].toString();
-    String imageUrl = product['productRepresentativeImage'] ?? 'https://example.com/default-image.png';
-    String title = product['productTitle'] ?? '제품 이름 없음';
+  var product = products[index];
+  String productId = product['productId'].toString();
+  String imageUrl = product['productRepresentativeImage'] ?? 'https://example.com/default-image.png';
+  String title = product['productTitle'] ?? '제품 이름 없음';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () => _handleProductTap(productId),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(imageUrl),
-                ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Expanded(
+        child: GestureDetector(
+          onTap: () => _handleProductTap(productId),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(imageUrl),
               ),
             ),
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
-  }
+      ),
+      SizedBox(height: 10),
+      Text(
+        title,
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    ],
+  );
+}
+
 
   void _handleProductTap(String productId) async {
     if (!mounted) return;
 
-    try {
-      final productService = ProductService();
-      final productDetails = await productService.getProductDetails(productId);
-      final quantity = productDetails['productQuantity'] ?? 0;
+     try {
+       final productService = ProductService();
+       final productDetails = await productService.getProductDetails(productId);
+       final quantity = productDetails['productStockQuantity'] ?? 0;
 
-      if (quantity > 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Product(productId: productId),
-          ),
-        );
-      } else {
-        _showSoldOutDialog();
-      }
-    } catch (e) {
-      if (!mounted) return;
-      print('상품 상세 정보를 가져오는데 실패했습니다: $e');
-    }
-  }
+       if (quantity > 0) {
+         Navigator.push(
+           context,
+           MaterialPageRoute(
+             builder: (context) => Product(productId: productId),
+           ),
+         );
+       } else {
+         _showSoldOutDialog();
+       }
+     } catch (e) {
+       if (!mounted) return;
+       print('상품 상세 정보를 가져오는데 실패했습니다: $e');
+     }
 
-  void _showSoldOutDialog() {
-    if (!mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text('알림'),
-          content: Text('이 제품은 품절되었습니다.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('확인'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
-        );
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Product(productId: productId),
+      ),
     );
   }
+
+   void _showSoldOutDialog() {
+     if (!mounted) return;
+
+     showDialog(
+       context: context,
+       builder: (BuildContext dialogContext) {
+         return AlertDialog(
+           title: Text('알림'),
+           content: Text('이 제품은 품절되었습니다.'),
+           actions: <Widget>[
+             TextButton(
+               child: Text('확인'),
+               onPressed: () {
+                 Navigator.of(dialogContext).pop();
+               },
+             ),
+           ],
+         );
+       },
+     );
+   }
 }
-
-
-
-
-
-
