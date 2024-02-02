@@ -1,16 +1,6 @@
-# artx_ios
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![image](https://github.com/m-artx/artx-ios/assets/81036457/ee8ba5c7-9aaf-4bb7-bd78-98c430034ff5)
+![image](https://github.com/m-artx/artx-ios/assets/81036457/4d88592b-4e50-4e21-bff0-029b23465822)
+![image](https://github.com/m-artx/artx-ios/assets/81036457/f49f3337-d296-460f-97f8-91377df833ad)
+![image](https://github.com/m-artx/artx-ios/assets/81036457/20e8f4bd-23f0-4315-8a48-e8b866c1b46e)
+![image](https://github.com/m-artx/artx-ios/assets/81036457/4e466582-f109-4215-9f30-971672def3ee)
+![image](https://github.com/m-artx/artx-ios/assets/81036457/7e3979b9-21ed-41cb-899f-4439045c08a6)
